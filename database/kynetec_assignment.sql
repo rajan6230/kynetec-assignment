@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 08, 2026 at 01:17 PM
+-- Generation Time: Apr 08, 2026 at 04:47 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -194,7 +194,114 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (8, '2026_04_08_072240_create_orders_table', 1),
 (9, '2026_04_08_072245_create_inventories_table', 1),
 (10, '2026_04_08_072250_create_order_items_table', 1),
-(11, '2026_04_08_072255_create_product_discount_table', 1);
+(11, '2026_04_08_072255_create_product_discount_table', 1),
+(12, '2026_04_08_142356_create_oauth_auth_codes_table', 2),
+(13, '2026_04_08_142357_create_oauth_access_tokens_table', 2),
+(14, '2026_04_08_142358_create_oauth_refresh_tokens_table', 2),
+(15, '2026_04_08_142359_create_oauth_clients_table', 2),
+(16, '2026_04_08_142400_create_oauth_device_codes_table', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `oauth_access_tokens`
+--
+
+CREATE TABLE `oauth_access_tokens` (
+  `id` char(80) NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `client_id` char(36) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `scopes` text DEFAULT NULL,
+  `revoked` tinyint(1) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `expires_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `oauth_access_tokens`
+--
+
+INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes`, `revoked`, `created_at`, `updated_at`, `expires_at`) VALUES
+('2aeafd094471901d3950f54fe7dd03f408bbd7261a1191f10b4d401ac6a568be61590575a439a632', 3, '019d6d7b-a7a4-7344-8972-25c6487dee86', 'API Token', '[]', 0, '2026-04-08 09:02:05', '2026-04-08 09:02:05', '2027-04-08 14:32:05'),
+('4f50c1206cc061d5a86a346ba0201b38705e67dde320dd60b0fd1db1360c359554e2b127cf5a029f', 3, '019d6d7b-a7a4-7344-8972-25c6487dee86', 'API Token', '[]', 0, '2026-04-08 09:01:09', '2026-04-08 09:01:09', '2027-04-08 14:31:09'),
+('64b4c15f47867e2354ca7be9a1f96ffa2c639fa9e8a3940dd434a579efabf132b05962ac33cf0518', 4, '019d6d7b-a7a4-7344-8972-25c6487dee86', 'API Token', '[]', 0, '2026-04-08 09:00:58', '2026-04-08 09:00:58', '2027-04-08 14:30:58'),
+('d3302b22803d127ed16dd36e4112c9deeef83b02b0c00147355f8ba5a02a3caf8ef866f8e8453dd7', 3, '019d6d7b-a7a4-7344-8972-25c6487dee86', 'API Token', '[]', 0, '2026-04-08 09:01:41', '2026-04-08 09:01:41', '2027-04-08 14:31:41');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `oauth_auth_codes`
+--
+
+CREATE TABLE `oauth_auth_codes` (
+  `id` char(80) NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `client_id` char(36) NOT NULL,
+  `scopes` text DEFAULT NULL,
+  `revoked` tinyint(1) NOT NULL,
+  `expires_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `oauth_clients`
+--
+
+CREATE TABLE `oauth_clients` (
+  `id` char(36) NOT NULL,
+  `owner_type` varchar(255) DEFAULT NULL,
+  `owner_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `secret` varchar(255) DEFAULT NULL,
+  `provider` varchar(255) DEFAULT NULL,
+  `redirect_uris` text NOT NULL,
+  `grant_types` text NOT NULL,
+  `revoked` tinyint(1) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `oauth_clients`
+--
+
+INSERT INTO `oauth_clients` (`id`, `owner_type`, `owner_id`, `name`, `secret`, `provider`, `redirect_uris`, `grant_types`, `revoked`, `created_at`, `updated_at`) VALUES
+('019d6d7a-789f-7115-92db-b80d8ea41d00', NULL, NULL, 'KeyneticAssign', '$2y$12$mFGrp5SRqac9vd9.klUshOrsp62xDF8KBccVvbHXvbmDQPU0qzDxy', NULL, '[]', '[\"personal_access\"]', 0, '2026-04-08 08:53:56', '2026-04-08 08:53:56'),
+('019d6d7b-a7a4-7344-8972-25c6487dee86', NULL, NULL, 'KeyneticAssign', '$2y$12$ZmXh9U9OxmRdp9pZIALqGOI9rTn6zZqB0XLX2vr69Q4fdQzPb2TQq', NULL, '[]', '[\"personal_access\"]', 0, '2026-04-08 08:55:13', '2026-04-08 08:55:13');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `oauth_device_codes`
+--
+
+CREATE TABLE `oauth_device_codes` (
+  `id` char(80) NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `client_id` char(36) NOT NULL,
+  `user_code` char(8) NOT NULL,
+  `scopes` text NOT NULL,
+  `revoked` tinyint(1) NOT NULL,
+  `user_approved_at` datetime DEFAULT NULL,
+  `last_polled_at` datetime DEFAULT NULL,
+  `expires_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `oauth_refresh_tokens`
+--
+
+CREATE TABLE `oauth_refresh_tokens` (
+  `id` char(80) NOT NULL,
+  `access_token_id` char(80) NOT NULL,
+  `revoked` tinyint(1) NOT NULL,
+  `expires_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -269,7 +376,18 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (8, 'App\\Models\\User', 3, 'api-token', 'b813bb28cff0b342b4932025e232975a640f1e1ef0ebfff079a478e6d706eed9', '[\"*\"]', NULL, NULL, '2026-04-08 05:03:34', '2026-04-08 05:03:34'),
 (9, 'App\\Models\\User', 3, 'api-token', 'e3414c1a02ef88100afd7e5c69bf43a408bb218110a4e7bbfedc082d9ede81f4', '[\"*\"]', NULL, NULL, '2026-04-08 05:05:56', '2026-04-08 05:05:56'),
 (10, 'App\\Models\\User', 3, 'api-token', '3da968a85e73a58cbd8680b8327f65d7160ce1ffe89d88fde8e40141d7cf9a6b', '[\"*\"]', NULL, NULL, '2026-04-08 05:18:12', '2026-04-08 05:18:12'),
-(11, 'App\\Models\\User', 3, 'api-token', '33f52e7bd19cbb565decdd9a43959c3ca6014d9a7ef8a826a902ede54e1cb783', '[\"*\"]', NULL, NULL, '2026-04-08 05:41:16', '2026-04-08 05:41:16');
+(11, 'App\\Models\\User', 3, 'api-token', '33f52e7bd19cbb565decdd9a43959c3ca6014d9a7ef8a826a902ede54e1cb783', '[\"*\"]', NULL, NULL, '2026-04-08 05:41:16', '2026-04-08 05:41:16'),
+(12, 'App\\Models\\User', 3, 'api-token', 'c7cb3fec993d776c287a264ecf92f4b491d7f7f460dd0e081018a54b3bdc2bd5', '[\"*\"]', NULL, NULL, '2026-04-08 06:16:40', '2026-04-08 06:16:40'),
+(13, 'App\\Models\\User', 3, 'api-token', 'dc3d609cd78880da9b2ae83ef665d3ab53a583e0ea10ff2b1e748cd30afc84c7', '[\"*\"]', NULL, NULL, '2026-04-08 06:17:57', '2026-04-08 06:17:57'),
+(14, 'App\\Models\\User', 3, 'api-token', '25e4d4b9ec9d01bd29c57908b8c4e9e88d49feeae357f57168a4d7e79c4c1a6a', '[\"*\"]', NULL, NULL, '2026-04-08 06:56:05', '2026-04-08 06:56:05'),
+(15, 'App\\Models\\User', 3, 'api-token', '98fab6381295a786db61293fa1dcafd2f6c7d3a30f74465e525874993b81e42a', '[\"*\"]', NULL, NULL, '2026-04-08 07:02:11', '2026-04-08 07:02:11'),
+(16, 'App\\Models\\User', 3, 'api-token', 'f7e136ddf95714cca241f71c24f06c065a587ca1ed744b0cb9b2c6f0a507ec97', '[\"*\"]', NULL, NULL, '2026-04-08 07:21:16', '2026-04-08 07:21:16'),
+(17, 'App\\Models\\User', 3, 'api-token', '12b9b188d3845ea8b17677b2035b68f5204a9987587ed7225321e42fb6117780', '[\"*\"]', NULL, NULL, '2026-04-08 07:34:30', '2026-04-08 07:34:30'),
+(18, 'App\\Models\\User', 3, 'api-token', '30100cdcf2d300c047ab0aed889a1f9674c8cd7fd650d1fc51f77e354caec558', '[\"*\"]', NULL, NULL, '2026-04-08 07:40:59', '2026-04-08 07:40:59'),
+(19, 'App\\Models\\User', 3, 'api-token', '3c0e1fea013654915a182923ac0fcf31c10a0d8b96a378f13cb34c1b5000c005', '[\"*\"]', NULL, NULL, '2026-04-08 07:43:03', '2026-04-08 07:43:03'),
+(20, 'App\\Models\\User', 3, 'api-token', '0792088f3880a13cff78bede7301db78decdd9c23b42c20a7d6a319e2c401466', '[\"*\"]', NULL, NULL, '2026-04-08 07:52:07', '2026-04-08 07:52:07'),
+(21, 'App\\Models\\User', 3, 'api-token', 'bfd0b25ade604880a0f03daa882d23fe31d673cd774e3d4d052ed1dec6ff4f30', '[\"*\"]', NULL, NULL, '2026-04-08 07:53:10', '2026-04-08 07:53:10'),
+(22, 'App\\Models\\User', 3, 'api-token', 'ef8aa7173a5f5328be6bda8aeffce484717d8235067ad43a0f0fa2613eddb13b', '[\"*\"]', NULL, NULL, '2026-04-08 08:29:57', '2026-04-08 08:29:57');
 
 -- --------------------------------------------------------
 
@@ -338,8 +456,10 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('40Gd1oMCMN2CfPe0RxNNb2GJoZVMyXIqEeBHWDah', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiNHFtc0F4dmxTd3JlSDl3Rkt0VklxcUViUlVOMXV1SWVMYlF1cjJIVyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7czo1OiJyb3V0ZSI7Tjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1775646728),
-('NYHHUQKhklbST9fAjS85zN4vOAYxsh3BtFE4KPEe', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiQmZHNVRXWjZpcTZwWjBUbFpWUGV3aWZvRTNsR0N1MFRlaHpLSEZkNSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7czo1OiJyb3V0ZSI7czoyNzoiZ2VuZXJhdGVkOjphZU1GdTZmaTl6NTM2aERsIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1775644318);
+('40Gd1oMCMN2CfPe0RxNNb2GJoZVMyXIqEeBHWDah', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiNHFtc0F4dmxTd3JlSDl3Rkt0VklxcUViUlVOMXV1SWVMYlF1cjJIVyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7czo1OiJyb3V0ZSI7Tjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1775652667),
+('ndDVMGUHYbUjHNHYsHQmcuJ98PBZ9ZAQ5x1sC1qa', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoieTJmM2tUT1lnN1V5c0FESUVGNDlOekZDRWlHWWx1V2JJR1BsSDQydyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7czo1OiJyb3V0ZSI7Tjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1775658699),
+('NYHHUQKhklbST9fAjS85zN4vOAYxsh3BtFE4KPEe', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiQmZHNVRXWjZpcTZwWjBUbFpWUGV3aWZvRTNsR0N1MFRlaHpLSEZkNSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7czo1OiJyb3V0ZSI7czoyNzoiZ2VuZXJhdGVkOjphZU1GdTZmaTl6NTM2aERsIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1775644318),
+('RWxUF7r9bEtNQaODTxTvfYFpur5MEhmo19OaOvNv', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiMnltRVc4aXdGRU9nV2RVOTY4NDRqZUtjWDkzaTZsM016dEtHaWFmZyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7czo1OiJyb3V0ZSI7Tjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1775658693);
 
 -- --------------------------------------------------------
 
@@ -430,6 +550,43 @@ ALTER TABLE `job_batches`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `oauth_access_tokens`
+--
+ALTER TABLE `oauth_access_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `oauth_access_tokens_user_id_index` (`user_id`);
+
+--
+-- Indexes for table `oauth_auth_codes`
+--
+ALTER TABLE `oauth_auth_codes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `oauth_auth_codes_user_id_index` (`user_id`);
+
+--
+-- Indexes for table `oauth_clients`
+--
+ALTER TABLE `oauth_clients`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `oauth_clients_owner_type_owner_id_index` (`owner_type`,`owner_id`);
+
+--
+-- Indexes for table `oauth_device_codes`
+--
+ALTER TABLE `oauth_device_codes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `oauth_device_codes_user_code_unique` (`user_code`),
+  ADD KEY `oauth_device_codes_user_id_index` (`user_id`),
+  ADD KEY `oauth_device_codes_client_id_index` (`client_id`);
+
+--
+-- Indexes for table `oauth_refresh_tokens`
+--
+ALTER TABLE `oauth_refresh_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `oauth_refresh_tokens_access_token_id_index` (`access_token_id`);
 
 --
 -- Indexes for table `orders`
@@ -529,7 +686,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -547,7 +704,7 @@ ALTER TABLE `order_items`
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `products`

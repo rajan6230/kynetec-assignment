@@ -1,21 +1,23 @@
 # Kynetec Assignment
 
-Full-stack assignment built with **Laravel 11** and **AngularJS 1.8.2**. The application provides token-based login and separate SPA pages for **Products**, **Discounts**, and **Categories**. The frontend uses AngularJS routing with hash URLs, and the backend exposes protected API endpoints for authenticated access. [cite:111]
+Full-stack assignment built with **Laravel 12** and **AngularJS 1.8.2**. The application provides token-based login and separate SPA pages for **Products**, **Discounts**, and **Categories**. The frontend uses AngularJS routing with hash URLs, and the backend exposes protected API endpoints for authenticated access. [cite:111]
 
 ## Tech Stack
 
-- Laravel 11
+- Laravel 12
 - AngularJS 1.8.2
 - Bootstrap 5
-- Laravel Sanctum for token authentication
+- Laravel Passport for token authentication
 - MySQL
+- API Style: REST API with Bearer token authentication
 
 ## Features
 
-- Token-based login API
+- User login with Laravel Passport authentication
 - AngularJS single-page application
 - Separate Products, Discounts, and Categories pages
-- Protected API routes with Bearer token
+- Bearer token protected API route
+- Eloquent ORM relationships
 - Responsive UI using Bootstrap
 - Seeded login credentials for quick review
 
@@ -82,22 +84,32 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-### 6. Run migrations and seeders
+### 6. Database setup
+You can use either of the following options:
 
-```bash
+#### Option A: Fresh migration with seeders
 php artisan migrate:fresh --seed
-
-OR 
-
-Create database: kynetec_assignment
-Import database/kynetec_assignment.sql in phpMyAdmin
-Then run:
-php artisan serve
-```
-
 This command creates the tables and inserts demo data, including the seeded login user.
 
-### 7. Start the Laravel server
+#### Option B: Import provided SQL file
+
+1. Create database: `kynetec_assignment`
+2. Import `database/kynetec_assignment.sql` using phpMyAdmin or MySQL client
+3. Then continue with the server start command below 
+
+### 7. Passport setup
+
+Run the following commands for Passport authentication:
+
+```bash
+php artisan passport:keys
+php artisan passport:client --personal
+```
+
+If keys already exist, you can skip regenerating them.
+
+
+### 8. Start the Laravel server
 
 ```bash
 php artisan serve
@@ -117,6 +129,9 @@ Use the seeded user below:
 Email: admin@admin.com
 Password: password
 ```
+## Authentication
+
+This project uses **Laravel Passport** for API authentication.
 
 ## API Endpoints
 
@@ -150,12 +165,14 @@ After setup, verify the following:
 - Categories page loads category data
 - Navbar switches between pages correctly
 - Unauthorized access redirects back to login
+- Protected APIs work with Bearer token authentication
 
 ## Common Commands
 
 ```bash
 php artisan serve
 php artisan migrate:fresh --seed
+php artisan passport:client --personal
 git add .
 git commit -m "Update project"
 git push
@@ -168,3 +185,4 @@ git push
 - The backend APIs are defined in `routes/api.php`.
 - Demo data is loaded through database seeders.
 - If the UI appears cached after updates, use `Ctrl + F5` for a hard refresh.
+- Existing product, category, and discount functionality remains unchanged; only the authentication layer was updated to Passport
