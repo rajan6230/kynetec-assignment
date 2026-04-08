@@ -1,59 +1,170 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Kynetec Assignment
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Full-stack assignment built with **Laravel 11** and **AngularJS 1.8.2**. The application provides token-based login and separate SPA pages for **Products**, **Discounts**, and **Categories**. The frontend uses AngularJS routing with hash URLs, and the backend exposes protected API endpoints for authenticated access. [cite:111]
 
-## About Laravel
+## Tech Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Laravel 11
+- AngularJS 1.8.2
+- Bootstrap 5
+- Laravel Sanctum for token authentication
+- MySQL
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Token-based login API
+- AngularJS single-page application
+- Separate Products, Discounts, and Categories pages
+- Protected API routes with Bearer token
+- Responsive UI using Bootstrap
+- Seeded login credentials for quick review
 
-## Learning Laravel
+## Project Structure
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+```text
+project-root/
+├── app/
+├── database/
+│   └── seeders/
+├── public/
+│   └── index.html
+├── routes/
+│   └── api.php
+├── .env.example
+├── .gitignore
+├── composer.json
+└── README.md
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Setup Steps
 
-## Laravel Sponsors
+### 1. Clone the repository
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+git clone https://github.com/rajan6230/kynetec-assignment.git
+cd kynetec-assignment
+```
 
-### Premium Partners
+### 2. Install PHP dependencies
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+composer install
+```
 
-## Contributing
+### 3. Create environment file
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+cp .env.example .env
+```
 
-## Code of Conduct
+If `cp` does not work on Windows CMD, copy the file manually or use:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+copy .env.example .env
+```
 
-## Security Vulnerabilities
+### 4. Generate application key
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+php artisan key:generate
+```
 
-## License
+### 5. Configure database
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Update `.env` with your local database values:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=kynetec_assignment
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 6. Run migrations and seeders
+
+```bash
+php artisan migrate:fresh --seed
+
+OR 
+
+Create database: kynetec_assignment
+Import database/kynetec_assignment.sql in phpMyAdmin
+Then run:
+php artisan serve
+```
+
+This command creates the tables and inserts demo data, including the seeded login user.
+
+### 7. Start the Laravel server
+
+```bash
+php artisan serve
+```
+
+Open the application in the browser:
+
+```text
+http://127.0.0.1:8000/index.html#/login
+```
+
+## Demo Credentials
+
+Use the seeded user below:
+
+```text
+Email: admin@admin.com
+Password: password
+```
+
+## API Endpoints
+
+The backend exposes a login route and protected routes for the SPA. Protected endpoints require an Authorization header with a Bearer token, which is the normal pattern when working with Git remotes and authenticated workflows documented through GitHub-style repository setup guidance. [cite:122][cite:111]
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| POST | `/api/login` | Authenticate user and return token |
+| GET | `/api/products` | Fetch product listing |
+| GET | `/api/discounts` | Fetch discount listing |
+| GET | `/api/categories` | Fetch categories with nested children |
+
+## Frontend Routes
+
+The AngularJS SPA uses hash-based routes so each page loads separately in `ng-view`. Hash-based routing is a standard AngularJS pattern for client-side navigation. [cite:111]
+
+```text
+#/login
+#/products
+#/discounts
+#/categories
+```
+
+## Verification Checklist
+
+After setup, verify the following:
+
+- Login works with seeded credentials
+- Products page loads product data
+- Discounts page loads discount data
+- Categories page loads category data
+- Navbar switches between pages correctly
+- Unauthorized access redirects back to login
+
+## Common Commands
+
+```bash
+php artisan serve
+php artisan migrate:fresh --seed
+git add .
+git commit -m "Update project"
+git push
+```
+
+## Notes for Reviewer
+
+- The frontend entry file is `public/index.html`.
+- AngularJS uses `#/products`, `#/discounts`, and `#/categories` routes.
+- The backend APIs are defined in `routes/api.php`.
+- Demo data is loaded through database seeders.
+- If the UI appears cached after updates, use `Ctrl + F5` for a hard refresh.
