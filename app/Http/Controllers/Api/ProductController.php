@@ -26,7 +26,7 @@ class ProductController extends Controller
             });
         }
 
-        $products = $query->paginate(10);
+        $products = $query->paginate(2);
 
         return response()->json($products);
     }

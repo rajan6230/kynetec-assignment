@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keynetic Assignment - Products & Discounts Manager</title>
+    <title>Kynetic Assignment - Products & Discounts Manager</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -19,7 +19,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="#/products">Keynetic Manager</a>
+            <a class="navbar-brand" href="#/products">Kynetic Manager</a>
             <div class="navbar-nav ms-auto" ng-controller="NavCtrl">
                 <a class="nav-link" href="#/login" ng-if="!auth.isAuthenticated()">Login</a>
                 <a class="nav-link" href="#/products" ng-if="auth.isAuthenticated()">Products</a>
@@ -85,6 +85,7 @@
                                 <h2 class="mb-1">Products</h2>
                                 <p class="text-muted mb-0">Products listing page</p>
                             </div>
+							
                             <input type="text" class="form-control" style="max-width:280px" placeholder="Search products" ng-model="search">
                         </div>
                         <div ng-if="loading" class="text-center py-5">Loading products...</div>
@@ -101,6 +102,23 @@
                                 </div>
                             </div>
                         </div>
+						<div class="row mt-4" ng-if="!loading && products.length">
+							<div class="col-12 d-flex justify-content-between align-items-center">
+								<button class="btn btn-outline-primary"
+										ng-click="prevPage()"
+										ng-disabled="currentPage === 1">
+									Previous
+								</button>
+
+								<span>Page {{ currentPage }} of {{ lastPage }} | Total: {{ total }}</span>
+
+								<button class="btn btn-outline-primary"
+										ng-click="nextPage()"
+										ng-disabled="currentPage === lastPage">
+									Next
+								</button>
+							</div>
+						</div>
                     `,
                     controller: 'ProductsCtrl'
                 })
@@ -239,22 +257,58 @@
             };
         }]);
 
-        app.controller('ProductsCtrl', ['$scope', '$http', 'AuthService', function($scope, $http, AuthService) {
-            $scope.products = [];
-            $scope.loading = true;
-            $scope.error = '';
+app.controller('ProductsCtrl', ['$scope', '$http', 'AuthService', function($scope, $http, AuthService) {
+    $scope.products = [];
+    $scope.loading = true;
+    $scope.error = '';
+    $scope.currentPage = 1;
+    $scope.lastPage = 1;
+    $scope.total = 0;
+    $scope.search = '';
 
-            $http.get(AuthService.apiUrl + '/products', {
-                headers: AuthService.getHeaders()
-            }).then(function(response) {
-                $scope.products = response.data.data || response.data;
-            }).catch(function(error) {
-                $scope.error = (error.status === 401) ? 'Unauthorized. Please login again.' : 'Failed to load products';
-                if (error.status === 401) AuthService.logout();
-            }).finally(function() {
-                $scope.loading = false;
-            });
-        }]);
+    $scope.loadProducts = function(page) {
+        $scope.loading = true;
+
+        var url = AuthService.apiUrl + '/products?page=' + page;
+        if ($scope.search) {
+            url += '&search=' + encodeURIComponent($scope.search);
+        }
+
+        $http.get(url, {
+            headers: AuthService.getHeaders()
+        }).then(function(response) {
+            $scope.products = response.data.data;
+            $scope.currentPage = response.data.current_page;
+            $scope.lastPage = response.data.last_page;
+            $scope.total = response.data.total;
+        }).catch(function(error) {
+            $scope.error = 'Failed to load products';
+            if (error.status === 401) {
+                AuthService.logout();
+            }
+        }).finally(function() {
+            $scope.loading = false;
+        });
+    };
+
+    $scope.searchProducts = function() {
+        $scope.loadProducts(1);
+    };
+
+    $scope.prevPage = function() {
+        if ($scope.currentPage > 1) {
+            $scope.loadProducts($scope.currentPage - 1);
+        }
+    };
+
+    $scope.nextPage = function() {
+        if ($scope.currentPage < $scope.lastPage) {
+            $scope.loadProducts($scope.currentPage + 1);
+        }
+    };
+
+    $scope.loadProducts(1);
+}]);
 
         app.controller('DiscountsCtrl', ['$scope', '$http', 'AuthService', function($scope, $http, AuthService) {
             $scope.discounts = [];
